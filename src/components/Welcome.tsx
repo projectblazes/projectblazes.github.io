@@ -1,5 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import image1 from '../assets/img/image1.png';
+import image2 from '../assets/img/image2.png';
+import image3 from '../assets/img/image3.png';
+import image4 from '../assets/img/image4.png';
+
 const VRIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 12h.01M7 12h.01M11 12h.01M15 12h.01M19 12h.01" />
@@ -493,7 +498,7 @@ const Welcome: React.FC = () => {
                             />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {['/img/image1.png', '/img/image2.png', '/img/image3.png', '/img/image4.png'].map((image, index) => (
+                            {[image1, image2, image3, image4].map((image, index) => (
                                 <motion.div 
                                     key={index}
                                     className="rounded-xl overflow-hidden cursor-pointer relative group aspect-[4/3]"

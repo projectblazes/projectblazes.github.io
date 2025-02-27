@@ -16,6 +16,22 @@ indexContent = indexContent.replace(/href="\//g, 'href="./');
 // Write the modified content back
 fs.writeFileSync(indexPath, indexContent);
 
+// Also check and fix asset references in JS files
+const assetsDir = path.resolve(__dirname, 'dist', 'assets');
+if (fs.existsSync(assetsDir)) {
+  const jsFiles = fs.readdirSync(assetsDir).filter(file => file.endsWith('.js'));
+  
+  jsFiles.forEach(file => {
+    const filePath = path.join(assetsDir, file);
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Replace absolute paths in JS files
+    content = content.replace(/\/img\//g, 'img/');
+    
+    fs.writeFileSync(filePath, content);
+  });
+}
+
 // Copy 404.html to dist folder
 fs.copyFileSync(
   path.resolve(__dirname, 'public/404.html'),

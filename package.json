@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://projectblazes.github.io",
+  "homepage": "https://projectblazes.github.io/projectblaze",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
