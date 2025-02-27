@@ -16,16 +16,11 @@ indexContent = indexContent.replace(/href="\//g, 'href="./');
 // Write the modified content back
 fs.writeFileSync(indexPath, indexContent);
 
-console.log('✅ Fixed paths in index.html for GitHub Pages deployment');
-
-// This is a simple script to copy the 404.html to the dist folder
-const fs = require('fs');
-const path = require('path');
-
 // Copy 404.html to dist folder
 fs.copyFileSync(
   path.resolve(__dirname, 'public/404.html'),
   path.resolve(__dirname, 'dist/404.html')
 );
 
+console.log('✅ Fixed paths in index.html for GitHub Pages deployment');
 console.log('Deployment files prepared successfully!'); 
