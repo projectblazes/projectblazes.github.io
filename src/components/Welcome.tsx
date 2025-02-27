@@ -493,7 +493,7 @@ const Welcome: React.FC = () => {
                             />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {['/image1.png', '/image2.png', '/image3.png', '/image4.png'].map((image, index) => (
+                            {['/img/image1.png', '/img/image2.png', '/img/image3.png', '/img/image4.png'].map((image, index) => (
                                 <motion.div 
                                     key={index}
                                     className="rounded-xl overflow-hidden cursor-pointer relative group aspect-[4/3]"
