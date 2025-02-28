@@ -38,5 +38,18 @@ fs.copyFileSync(
   path.resolve(__dirname, 'dist/404.html')
 );
 
-console.log('✅ Fixed paths in index.html for GitHub Pages deployment');
-console.log('Deployment files prepared successfully!'); 
+// Simple script to fix paths in index.html for GitHub Pages deployment
+try {
+  // No need to modify paths if using custom domain
+  // Just ensure CNAME file exists
+  const cnamePath = path.resolve(__dirname, 'dist', 'CNAME');
+  if (!fs.existsSync(cnamePath)) {
+    fs.writeFileSync(cnamePath, 'projectblaze.net');
+    console.log('✅ Created CNAME file');
+  }
+  
+  console.log('✅ Deployment preparation complete');
+} catch (error) {
+  console.error('❌ Error in deploy script:', error);
+  process.exit(1);
+} 

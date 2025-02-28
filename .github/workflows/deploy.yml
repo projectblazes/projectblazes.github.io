@@ -16,15 +16,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+      
+      # Add this step to debug npm version
+      - name: Debug environment
+        run: |
+          node --version
+          npm --version
+          ls -la
+      
+      # Use npm install instead of npm ci for more flexibility
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+      
+      # Add this step to debug build issues
+      - name: List files before build
+        run: ls -la
+      
       - name: Build
         run: npm run build
+      
+      # Add this step to debug build output
+      - name: List build output
+        run: ls -la dist
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
