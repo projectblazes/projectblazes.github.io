@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { Link } from 'react-router-dom';
+// Replace these imports with your actual images
 import image1 from '../assets/img/image1.png';
 import image2 from '../assets/img/image2.png';
 import image3 from '../assets/img/image3.png';
 import image4 from '../assets/img/image4.png';
+import headerImage from '../assets/img/header.png';
 
 const VRIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -113,7 +116,11 @@ const Welcome: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-        useEffect(() => {
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    
+    const isMobile = dimensions.width < 768;
+    
+    useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             setMousePosition({
                 x: e.clientX,
@@ -273,7 +280,7 @@ const Welcome: React.FC = () => {
 
             {/* Header with Navigation and Social Links */}
             <motion.header 
-                className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex justify-between items-center"
+                className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4 flex justify-between items-center"
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
@@ -284,14 +291,129 @@ const Welcome: React.FC = () => {
                     whileHover={{ scale: 1.1 }}
                 >
                     <img 
-                        src="/projectblaze.png" 
+                        src={headerImage} 
                         alt="Project Blaze" 
-                        className="h-14"
+                        className="h-10 md:h-14"
                     />
                 </motion.div>
                 
-                {/* Social Media Links */}
-                <div className="flex items-center space-x-4">
+                {/* Tickets Button - Center of Header */}
+                <motion.div
+                    className="hidden md:block absolute left-1/2 transform -translate-x-1/2"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <Link to="/tickets">
+                        <motion.button
+                            className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg text-white font-medium flex items-center hover:from-red-700 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-red-500/20"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M15 5v2" />
+                                <path d="M15 11v2" />
+                                <path d="M15 17v2" />
+                                <path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 1 2-2z" />
+                            </svg>
+                            Tickets
+                        </motion.button>
+                    </Link>
+                </motion.div>
+                
+                {/* Mobile menu button */}
+                <motion.button
+                    className="md:hidden text-white p-2 z-50"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    {mobileMenuOpen ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    )}
+                </motion.button>
+                
+                {/* Mobile menu overlay */}
+                {mobileMenuOpen && (
+                    <motion.div 
+                        className="fixed inset-0 bg-black/95 z-40 flex flex-col items-center justify-center md:hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <div className="flex flex-col items-center space-y-8">
+                            <motion.a
+                                href="https://www.meta.com/experiences/7199026436861364/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl text-white font-bold text-lg flex items-center hover:from-red-700 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-red-500/30"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <DownloadIcon />
+                                Download Now
+                            </motion.a>
+                            
+                            {/* Tickets Button for Mobile */}
+                            <Link to="/tickets">
+                                <motion.div
+                                    className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl text-white font-bold text-lg flex items-center hover:from-red-700 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-red-500/30"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M15 5v2" />
+                                        <path d="M15 11v2" />
+                                        <path d="M15 17v2" />
+                                        <path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 1 2-2z" />
+                                    </svg>
+                                    Tickets
+                                </motion.div>
+                            </Link>
+                            
+                            <div className="flex items-center space-x-8 mt-8">
+                                <motion.a 
+                                    href="https://www.youtube.com/@ProjectBlazeOffical" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-white/70 hover:text-red-500 transition-colors duration-300"
+                                    whileHover={{ scale: 1.2 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <YoutubeIcon />
+                                </motion.a>
+                                <motion.a 
+                                    href="https://www.tiktok.com/@projectblazegame" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-white/70 hover:text-blue-400 transition-colors duration-300"
+                                    whileHover={{ scale: 1.2 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <TiktokIcon />
+                                </motion.a>
+                                <motion.a 
+                                    href="https://discord.gg/projectblaze" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-white/70 hover:text-indigo-400 transition-colors duration-300"
+                                    whileHover={{ scale: 1.2 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <DiscordIcon />
+                                </motion.a>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+                
+                {/* Desktop Social Media Links */}
+                <div className="hidden md:flex items-center space-x-4">
                     <motion.a 
                         href="https://www.youtube.com/@ProjectBlazeOffical" 
                         target="_blank" 
@@ -346,26 +468,26 @@ const Welcome: React.FC = () => {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    className="mb-6"
+                    className="mb-4 md:mb-6"
                 >
-                    <span className="px-4 py-1 bg-red-500/20 backdrop-blur-md text-white text-sm font-bold rounded-full inline-flex items-center shadow-lg border border-red-500/30">
-                        <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+                    <span className="px-3 py-1 md:px-4 md:py-1 bg-red-500/20 backdrop-blur-md text-white text-xs md:text-sm font-bold rounded-full inline-flex items-center shadow-lg border border-red-500/30">
+                        <span className="w-1.5 h-1.5 md:w-2 md:h-2 bg-red-500 rounded-full mr-1.5 md:mr-2 animate-pulse"></span>
                         NEW UPDATE
                     </span>
                 </motion.div>
 
-                {/* Main Title with cascading text animation */}
+                {/* Main Title with cascading text animation - smaller on mobile */}
                 <AnimatedText 
                     text="Project Blaze"
-                    className="text-7xl md:text-9xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400 drop-shadow-[0_0_15px_rgba(255,100,0,0.5)] flex"
+                    className="text-5xl sm:text-7xl md:text-9xl font-black mb-4 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400 drop-shadow-[0_0_15px_rgba(255,100,0,0.5)] flex"
                     delay={0.2}
                 />
 
                 {/* Subtitle with cascading text animation */}
-                <div className="relative mb-12">
+                <div className="relative mb-8 md:mb-12">
                     <AnimatedText 
                         text="The ultimate VR experience"
-                        className="text-xl md:text-2xl text-white/90 flex flex-wrap justify-center"
+                        className="text-lg md:text-2xl text-white/90 flex flex-wrap justify-center"
                         delay={0.6}
                     />
                     <motion.span 
@@ -376,7 +498,7 @@ const Welcome: React.FC = () => {
                     />
                 </div>
 
-                {/* CTA Button */}
+                {/* CTA Button - Visible on mobile too */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -387,7 +509,7 @@ const Welcome: React.FC = () => {
                         href="https://www.meta.com/experiences/7199026436861364/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl text-white font-bold text-lg flex items-center hover:from-red-700 hover:to-orange-700 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-red-500/30 mb-6"
+                        className="px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl text-white font-bold text-base md:text-lg flex items-center hover:from-red-700 hover:to-orange-700 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-red-500/30 mb-4 md:mb-6"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
@@ -395,7 +517,7 @@ const Welcome: React.FC = () => {
                         Download Now
                     </motion.a>
                     
-                    {/* Gorilla Tag Logo - Now larger */}
+                    {/* Gorilla Tag Logo - Smaller on mobile */}
                     <motion.a
                         href="https://www.meta.com/experiences/7199026436861364/"
                         target="_blank"
@@ -404,32 +526,32 @@ const Welcome: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.2, duration: 0.5 }}
                         whileHover={{ scale: 1.1 }}
-                        className="mt-4"
+                        className="mt-2 md:mt-4"
                     >
                         <img 
                             src="https://cdn.prod.website-files.com/634dcd98720fb26a457ae36f/636157e8bc53e88b65f3d4cf_Gorilla%20Tag%20Icons%20(3).webp" 
                             alt="Gorilla Tag Logo" 
-                            className="h-32 md:h-40"
+                            className="h-20 sm:h-24 md:h-40"
                         />
                     </motion.a>
                 </motion.div>
 
-                {/* Scroll indicator */}
+                {/* Scroll indicator - Smaller on mobile */}
                 <motion.div 
-                    className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+                    className="absolute bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.4, duration: 1 }}
                 >
                     <div className="flex flex-col items-center">
-                        <p className="text-white/70 text-sm mb-2">Scroll to explore</p>
+                        <p className="text-white/70 text-xs md:text-sm mb-1 md:mb-2">Scroll to explore</p>
                         <motion.div 
-                            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1"
+                            className="w-5 h-8 md:w-6 md:h-10 border-2 border-white/30 rounded-full flex justify-center p-1"
                             animate={{ y: [0, 10, 0] }}
                             transition={{ duration: 1.5, repeat: Infinity }}
                         >
                             <motion.div 
-                                className="w-1 h-2 bg-white/70 rounded-full"
+                                className="w-1 h-1.5 md:w-1 md:h-2 bg-white/70 rounded-full"
                                 animate={{ y: [0, 4, 0] }}
                                 transition={{ duration: 1.5, repeat: Infinity }}
                             />
@@ -440,21 +562,21 @@ const Welcome: React.FC = () => {
 
             {/* Scrollable Content Section */}
             <motion.section 
-                className="relative z-10 min-h-screen pt-20 px-4 mt-screen"
+                className="relative z-10 min-h-screen pt-16 md:pt-20 px-4 mt-screen"
                 style={{ opacity: contentOpacity, y: contentY }}
             >
                 <div className="max-w-7xl mx-auto">
                     {/* Section title with cascading text animation */}
-                    <div className="mb-16 text-center">
+                    <div className="mb-10 md:mb-16 text-center">
                         <AnimatedText 
                             text="Game Features"
-                            className="text-5xl font-bold text-white flex justify-center"
+                            className="text-4xl md:text-5xl font-bold text-white flex justify-center"
                             delay={0.1}
                         />
                     </div>
 
-                    {/* Feature Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                    {/* Feature Cards - Single column on mobile, three columns on desktop */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20">
                         {[
                             { icon: <VRIcon />, title: "VR Ready", desc: "Immersive virtual reality experience with full motion tracking and haptic feedback." },
                             { icon: <StarIcon />, title: "New Update", desc: "Latest features including new maps, characters, and gameplay mechanics." },
@@ -482,23 +604,28 @@ const Welcome: React.FC = () => {
                         ))}
                     </div>
 
-                    {/* Game Screenshots */}
+                    {/* Game Screenshots - Improved mobile layout */}
                     <motion.div 
-                        className="mb-20"
+                        className="mb-16 md:mb-20"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
                     >
-                        <div className="mb-10 text-center">
+                        <div className="mb-8 md:mb-10 text-center">
                             <AnimatedText 
                                 text="Game Screenshots"
-                                className="text-4xl font-bold text-white flex justify-center"
+                                className="text-3xl md:text-4xl font-bold text-white flex justify-center"
                                 delay={0.1}
                             />
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {[image1, image2, image3, image4].map((image, index) => (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                            {[
+                                image1, 
+                                image2, 
+                                image3, 
+                                image4
+                            ].map((image, index) => (
                                 <motion.div 
                                     key={index}
                                     className="rounded-xl overflow-hidden cursor-pointer relative group aspect-[4/3]"
@@ -521,20 +648,70 @@ const Welcome: React.FC = () => {
                             ))}
                         </div>
                     </motion.div>
+                    
+                    {/* Mobile-specific footer */}
+                    <div className="md:hidden pb-10">
+                        <div className="flex flex-col items-center">
+                            <motion.a
+                                href="https://www.meta.com/experiences/7199026436861364/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl text-white font-bold text-base flex items-center hover:from-red-700 hover:to-orange-700 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-red-500/30 mb-6"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <DownloadIcon />
+                                Download Now
+                            </motion.a>
+                            
+                            <div className="flex items-center space-x-6 mt-4">
+                                <motion.a 
+                                    href="https://www.youtube.com/@ProjectBlazeOffical" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-white/70 hover:text-red-500 transition-colors duration-300"
+                                    whileHover={{ scale: 1.2 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <YoutubeIcon />
+                                </motion.a>
+                                <motion.a 
+                                    href="https://www.tiktok.com/@projectblazegame" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-white/70 hover:text-blue-400 transition-colors duration-300"
+                                    whileHover={{ scale: 1.2 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <TiktokIcon />
+                                </motion.a>
+                                <motion.a 
+                                    href="https://discord.gg/projectblaze" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-white/70 hover:text-indigo-400 transition-colors duration-300"
+                                    whileHover={{ scale: 1.2 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <DiscordIcon />
+                                </motion.a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </motion.section>
 
-            {/* Image Modal */}
+            {/* Image Modal - Improved for mobile */}
             {selectedImage && (
                 <motion.div 
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-2 md:p-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() => setSelectedImage(null)}
                 >
                     <motion.div 
-                        className="relative max-w-4xl max-h-[90vh]"
+                        className="relative max-w-full md:max-w-4xl max-h-[90vh]"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
@@ -544,10 +721,10 @@ const Welcome: React.FC = () => {
                         <img 
                             src={selectedImage} 
                             alt="Game Screenshot" 
-                            className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                            className="max-w-full max-h-[80vh] md:max-h-[90vh] object-contain rounded-lg"
                         />
                         <button 
-                            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center text-white"
+                            className="absolute top-2 right-2 md:top-4 md:right-4 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/70 flex items-center justify-center text-white"
                             onClick={() => setSelectedImage(null)}
                         >
                             ✕
