@@ -5,7 +5,7 @@ import Tickets from './components/Tickets';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/">
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/tickets" element={<Tickets />} />
