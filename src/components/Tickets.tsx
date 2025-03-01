@@ -2,20 +2,45 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-// Define ticket types
+// Define ticket types with their specific questions
 const ticketTypes = [
-  { id: 'bug', label: 'Bug Report' },
-  { id: 'feature', label: 'Feature Request' },
-  { id: 'support', label: 'Support Request' },
-  { id: 'other', label: 'Other' }
+  { 
+    id: 'bug', 
+    label: 'Bug Report',
+    questions: [
+      { id: 'bugDescription', label: "What's your bug?", type: 'textarea' }
+    ]
+  },
+  { 
+    id: 'purchase', 
+    label: 'Purchase Support',
+    questions: [
+      { id: 'stripeOrderId', label: "What is your stripe order ID?", type: 'text' },
+      { id: 'playfabId', label: "What is your in-game playfab ID?", type: 'text' }
+    ]
+  },
+  { 
+    id: 'ban', 
+    label: 'Ban Appeal',
+    questions: [
+      { id: 'banReason', label: "Why were you banned?", type: 'textarea' },
+      { id: 'unbanReason', label: "Why should we unban you?", type: 'textarea' },
+      { id: 'gameId', label: "What was your in-game name or what is your Playfab ID?", type: 'text' }
+    ]
+  },
+  { 
+    id: 'other', 
+    label: 'Other',
+    questions: [
+      { id: 'description', label: "How can we help you?", type: 'textarea' }
+    ]
+  }
 ];
 
 const Tickets: React.FC = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    description: ''
-  });
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   
@@ -52,6 +77,11 @@ const Tickets: React.FC = () => {
     };
   }, []);
   
+  // Reset form data when ticket type changes
+  useEffect(() => {
+    setFormData({});
+  }, [selectedType]);
+  
   const mouseXPercent = dimensions.width ? mousePosition.x / dimensions.width : 0;
   const mouseYPercent = dimensions.height ? mousePosition.y / dimensions.height : 0;
   
@@ -74,15 +104,27 @@ const Tickets: React.FC = () => {
     
     setIsSubmitting(true);
     
-    // Get the ticket type label
-    const ticketTypeLabel = ticketTypes.find(t => t.id === selectedType)?.label || selectedType;
+    // Get the ticket type and its questions
+    const ticketType = ticketTypes.find(t => t.id === selectedType);
+    if (!ticketType) {
+      setIsSubmitting(false);
+      return;
+    }
     
     try {
+      // Format the description with questions and answers
+      let formattedDescription = '';
+      
+      ticketType.questions.forEach(question => {
+        const answer = formData[question.id] || 'No answer provided';
+        formattedDescription += `**${question.label}**\n${answer}\n\n`;
+      });
+      
       // Prepare the webhook payload
       const webhookData = {
         embeds: [{
-          title: `New Ticket: ${ticketTypeLabel}`,
-          description: formData.description,
+          title: `New Ticket: ${ticketType.label}`,
+          description: formattedDescription,
           color: 15548997, // Red color in decimal
           timestamp: new Date().toISOString(),
           footer: {
@@ -91,8 +133,8 @@ const Tickets: React.FC = () => {
         }]
       };
       
-      // Send the data to Discord webhook
-      const response = await fetch('https://discord.com/api/webhooks/1331783339417538610/7pMLYCffZiLyNXjiwm6bYC9tc8Kf5G4l5-VRY_jMP3jiHgFYHBwUl35phVzdW2euZ0Tl', {
+      // Send the data to Discord webhook - using the new webhook URL
+      const response = await fetch('https://discord.com/api/webhooks/1345181769556819979/Fa1QyV6F30sOrPBFqHzmJg_lvRSWT4v4fKNO2Z6uXhePyVAOyDCP4pX3iN-qQiJGMcw-', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +142,30 @@ const Tickets: React.FC = () => {
         body: JSON.stringify(webhookData),
       });
       
-      if (!response.ok) {
+      // Handle rate limiting
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After') || '5';
+        const waitTime = parseInt(retryAfter, 10) * 1000;
+        
+        // Show a more specific error message
+        console.log(`Rate limited. Retry after ${waitTime/1000} seconds.`);
+        
+        // Wait and retry automatically
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        
+        // Try again
+        const retryResponse = await fetch('https://discord.com/api/webhooks/1345181769556819979/Fa1QyV6F30sOrPBFqHzmJg_lvRSWT4v4fKNO2Z6uXhePyVAOyDCP4pX3iN-qQiJGMcw-', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookData),
+        });
+        
+        if (!retryResponse.ok) {
+          throw new Error('Failed to submit ticket after retry');
+        }
+      } else if (!response.ok) {
         throw new Error('Failed to submit ticket');
       }
       
@@ -111,9 +176,7 @@ const Tickets: React.FC = () => {
       // Reset form after submission
       setTimeout(() => {
         setSelectedType(null);
-        setFormData({
-          description: ''
-        });
+        setFormData({});
         setIsSubmitted(false);
       }, 3000);
       
@@ -124,6 +187,11 @@ const Tickets: React.FC = () => {
       alert('There was an error submitting your ticket. Please try again.');
     }
   };
+
+  // Get questions for the selected ticket type
+  const questions = selectedType 
+    ? ticketTypes.find(t => t.id === selectedType)?.questions || []
+    : [];
 
   return (
     <div ref={containerRef} className="relative min-h-screen bg-black overflow-hidden">
@@ -326,19 +394,34 @@ const Tickets: React.FC = () => {
                     onSubmit={handleSubmit}
                     className="space-y-6"
                   >
-                    <div>
-                      <label htmlFor="description" className="block text-gray-300 mb-2">Description</label>
-                      <textarea
-                        id="description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleInputChange}
-                        required
-                        rows={5}
-                        className="w-full px-4 py-3 bg-black/50 border border-red-500/30 rounded-lg focus:outline-none focus:border-red-500 resize-none"
-                        placeholder="Describe your issue or request in detail"
-                      ></textarea>
-                    </div>
+                    {questions.map((question) => (
+                      <div key={question.id}>
+                        <label htmlFor={question.id} className="block text-gray-300 mb-2">{question.label}</label>
+                        {question.type === 'textarea' ? (
+                          <textarea
+                            id={question.id}
+                            name={question.id}
+                            value={formData[question.id] || ''}
+                            onChange={handleInputChange}
+                            required
+                            rows={4}
+                            className="w-full px-4 py-3 bg-black/50 border border-red-500/30 rounded-lg focus:outline-none focus:border-red-500 resize-none"
+                            placeholder={`Enter your ${question.label.toLowerCase()}`}
+                          ></textarea>
+                        ) : (
+                          <input
+                            type="text"
+                            id={question.id}
+                            name={question.id}
+                            value={formData[question.id] || ''}
+                            onChange={handleInputChange}
+                            required
+                            className="w-full px-4 py-3 bg-black/50 border border-red-500/30 rounded-lg focus:outline-none focus:border-red-500"
+                            placeholder={`Enter your ${question.label.toLowerCase()}`}
+                          />
+                        )}
+                      </div>
+                    ))}
                     
                     <div className="pt-4">
                       <motion.button
