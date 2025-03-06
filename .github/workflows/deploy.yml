@@ -29,6 +29,13 @@ jobs:
           node --version
           npm --version
           ls -la
+          ls -la src/assets/img || echo "No images directory found"
+      
+      # Create assets directory if it doesn't exist
+      - name: Ensure assets directory exists
+        run: |
+          mkdir -p src/assets/img
+          touch src/assets/img/.gitkeep
       
       # Use npm install instead of npm ci for more flexibility
       - name: Install dependencies
@@ -43,7 +50,9 @@ jobs:
       
       # Add this step to debug build output
       - name: List build output
-        run: ls -la dist
+        run: |
+          ls -la dist
+          ls -la dist/assets || echo "No assets directory in dist"
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

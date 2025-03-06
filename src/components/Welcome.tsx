@@ -1,19 +1,19 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
-// Replace these imports with placeholder or remote images
-// import image1 from '../assets/img/image1.png';
-// import image2 from '../assets/img/image2.png';
-// import image3 from '../assets/img/image3.png';
-// import image4 from '../assets/img/image4.png';
-// import headerImage from '../assets/img/header.png';
+// Import the real images from assets
+import image1 from '../assets/img/image1.png';
+import image2 from '../assets/img/image2.png';
+import image3 from '../assets/img/image3.png';
+import image4 from '../assets/img/image4.png';
+import headerImage from '../assets/img/projectblaze.png';
 
-// Use placeholder images instead
-const image1 = 'https://placehold.co/600x400/red/white?text=Image+1';
-const image2 = 'https://placehold.co/600x400/orange/white?text=Image+2';
-const image3 = 'https://placehold.co/600x400/yellow/black?text=Image+3';
-const image4 = 'https://placehold.co/600x400/green/white?text=Image+4';
-const headerImage = 'https://placehold.co/300x100/red/white?text=Project+Blaze';
+// Remove placeholder images
+// const image1 = 'https://placehold.co/600x400/red/white?text=Image+1';
+// const image2 = 'https://placehold.co/600x400/orange/white?text=Image+2';
+// const image3 = 'https://placehold.co/600x400/yellow/black?text=Image+3';
+// const image4 = 'https://placehold.co/600x400/green/white?text=Image+4';
+// const headerImage = 'https://placehold.co/300x100/red/white?text=Project+Blaze';
 
 const VRIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -192,7 +192,7 @@ const Welcome: React.FC = () => {
                 <motion.div 
                     className="absolute inset-0 bg-cover bg-center opacity-20"
                     style={{ 
-                        backgroundImage: `url(https://media.discordapp.net/attachments/1328569259256975434/1344462339109556296/image.png)`,
+                        backgroundImage: `url(${headerImage})`,
                         filter: 'brightness(0.7) contrast(1.2)',
                         y: backgroundY
                     }}

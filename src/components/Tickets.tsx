@@ -125,7 +125,7 @@ const Tickets: React.FC = () => {
         embeds: [{
           title: `New Ticket: ${ticketType.label}`,
           description: formattedDescription,
-          color: 15548997, // Red color in decimal
+          color: 16750848, // Orange color in decimal (FF9900 in hex)
           timestamp: new Date().toISOString(),
           footer: {
             text: "Project Blaze Ticket System"

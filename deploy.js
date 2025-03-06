@@ -38,6 +38,25 @@ fs.copyFileSync(
   path.resolve(__dirname, 'dist/404.html')
 );
 
+// Ensure the images directory exists in dist
+const distImgDir = path.resolve(__dirname, 'dist', 'assets', 'img');
+if (!fs.existsSync(distImgDir)) {
+  fs.mkdirSync(distImgDir, { recursive: true });
+}
+
+// Copy images from src/assets/img to dist/assets/img
+const srcImgDir = path.resolve(__dirname, 'src', 'assets', 'img');
+if (fs.existsSync(srcImgDir)) {
+  const imgFiles = fs.readdirSync(srcImgDir);
+  imgFiles.forEach(file => {
+    fs.copyFileSync(
+      path.join(srcImgDir, file),
+      path.join(distImgDir, file)
+    );
+    console.log(`✅ Copied image: ${file}`);
+  });
+}
+
 // Simple script to fix paths in index.html for GitHub Pages deployment
 try {
   // No need to modify paths if using custom domain
