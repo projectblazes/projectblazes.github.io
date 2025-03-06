@@ -6,14 +6,15 @@ import image1 from '../assets/img/image1.png';
 import image2 from '../assets/img/image2.png';
 import image3 from '../assets/img/image3.png';
 import image4 from '../assets/img/image4.png';
-import headerImage from '../assets/img/projectblaze.png';
+// Note: The file is in src/assets/ not src/assets/img/
+import headerImage from '../assets/projectblaze.png';
 
-// Remove placeholder images
-// const image1 = 'https://placehold.co/600x400/red/white?text=Image+1';
-// const image2 = 'https://placehold.co/600x400/orange/white?text=Image+2';
-// const image3 = 'https://placehold.co/600x400/yellow/black?text=Image+3';
-// const image4 = 'https://placehold.co/600x400/green/white?text=Image+4';
-// const headerImage = 'https://placehold.co/300x100/red/white?text=Project+Blaze';
+// Use placeholder images until real ones are available
+const image1 = 'https://placehold.co/600x400/red/white?text=Image+1';
+const image2 = 'https://placehold.co/600x400/orange/white?text=Image+2';
+const image3 = 'https://placehold.co/600x400/yellow/black?text=Image+3';
+const image4 = 'https://placehold.co/600x400/green/white?text=Image+4';
+const headerImage = 'https://media.discordapp.net/attachments/1328569259256975434/1344462339109556296/image.png';
 
 const VRIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
