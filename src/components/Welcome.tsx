@@ -6,7 +6,6 @@ import image1 from '../assets/img/image1.png';
 import image2 from '../assets/img/image2.png';
 import image3 from '../assets/img/image3.png';
 import image4 from '../assets/img/image4.png';
-// Note: The file is in src/assets/ not src/assets/img/
 import headerImage from '../assets/projectblaze.png';
 
 // Use placeholder images until real ones are available
@@ -646,6 +645,10 @@ const Welcome: React.FC = () => {
                                 >
                                     <img 
                                         src={image} 
+                                        onError={(e) => {
+                                            e.currentTarget.onerror = null; 
+                                            e.currentTarget.src = fallbackImage1;
+                                        }}
                                         alt={`Game Screenshot ${index + 1}`} 
                                         className="w-full h-full object-cover"
                                     />
